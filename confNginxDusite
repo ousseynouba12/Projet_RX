@@ -1,0 +1,41 @@
+server {
+    listen 80;
+    server_name monitor.smarttech.sn;
+    root /var/www/rx;
+    index monitoring.html;
+    
+    # Modification de la Content Security Policy pour autoriser les connexions aux deux IPs
+    add_header Content-Security-Policy "default-src https: data: 'unsafe-inline' 'unsafe-eval'; connect-src https: http://192.168.1.12:5000 http://192.168.1.16:5000 'self'";
+    
+    # Proxy pour toutes les routes de l'API sur 192.168.1.12:5000
+    location /api12/ {
+        proxy_pass http://192.168.1.12:5000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    # Proxy pour toutes les routes de l'API sur 192.168.1.16:5000
+    location /api16/ {
+        proxy_pass http://192.168.1.16:5000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+    
+    location / {
+        try_files $uri $uri/ =404;
+    }
+    
+    # Servir les fichiers CSS
+    location ~* \.css$ {
+        default_type text/css;
+    }
+    
+    # Servir les fichiers JS
+    location ~* \.js$ {
+        default_type application/javascript;
+    }
+}

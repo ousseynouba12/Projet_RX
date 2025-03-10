@@ -1,0 +1,22 @@
+graph TD
+    A[Application Web] -->|CRUD| B[(Base de Données MySQL)]
+    A -->|Envoi d'e-mails| C[iRedMail]
+    A -->|Stockage de fichiers| D[Serveur FTP]
+    A -->|Hébergement| E[Serveur Web Apache2/Nginx]
+    E -->|Accès via| F[DNS (BIND)]
+    G[Utilisateurs] -->|Accès à l'application| F
+    H[Admin] -->|SSH| I[Machines Linux]
+    H -->|VNC/NoVNC| I
+    H -->|RDP| J[Machines Windows]
+    subgraph Réseau Interne
+        B
+        C
+        D
+        E
+        F
+        I
+        J
+    end
+    subgraph Accès Distant
+        H
+    end

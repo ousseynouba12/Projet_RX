@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Employés - SmartTech</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --border-radius: 4px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--light-color);
+            font-size: 1rem;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .action-buttons button {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 50%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .close-modal {
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Loader */
+        .loader {
+            display: none;
+            margin: 20px auto;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Employee Info Card */
+        .employee-info {
+            display: none;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        .employee-info dl {
+            display: grid;
+            grid-template-columns: 30% 70%;
+            gap: 10px;
+        }
+        
+        .employee-info dt {
+            font-weight: bold;
+        }
+        
+        .employee-info dd {
+            margin-left: 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 80%;
+                margin: 20% auto;
+            }
+            
+            .employee-info dl {
+                grid-template-columns: 100%;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Système de Gestion des Employés</h1>
+            <div class="subtitle">SmartTech.sn</div>
+        </header>
+        
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-danger" id="errorAlert"></div>
+        
+        <div class="card">
+            <div class="card-header">
+                <span>Gestion des Employés</span>
+                <button class="btn btn-primary" id="btnAddEmployee">Ajouter un Employé</button>
+            </div>
+            <div class="card-body">
+                <div class="employee-search">
+                    <div class="form-group">
+                        <label for="searchUsername">Rechercher un employé par nom d'utilisateur</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="searchUsername" placeholder="Entrez le nom d'utilisateur">
+                            <button class="btn btn-primary" id="btnSearchEmployee">Rechercher</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="employee-info" id="employeeInfo">
+                    <h3>Informations de l'Employé</h3>
+                    <dl>
+                        <dt>Nom d'utilisateur</dt>
+                        <dd id="infoUsername"></dd>
+                        
+                        <dt>Nom complet</dt>
+                        <dd id="infoFullName"></dd>
+                        
+                        <dt>Domaine</dt>
+                        <dd id="infoDomain"></dd>
+                        
+                        <dt>Département</dt>
+                        <dd id="infoDepartment"></dd>
+                        
+                        <dt>Email</dt>
+                        <dd id="infoEmail"></dd>
+                        
+                        <dt>Statut</dt>
+                        <dd id="infoStatus"></dd>
+                        
+                        <dt>Date de création</dt>
+                        <dd id="infoCreated"></dd>
+                    </dl>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnEditFoundEmployee">Modifier</button>
+                        <button class="btn btn-danger" id="btnDeleteFoundEmployee">Supprimer</button>
+                    </div>
+                </div>
+                
+                <div class="loader" id="loader"></div>
+                
+                <table id="employeesTable">
+                    <thead>
+                        <tr>
+                            <th>Nom d'utilisateur</th>
+                            <th>Nom complet</th>
+                            <th>Email</th>
+                            <th>Département</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="employeesTableBody">
+                        <!-- Employee data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Employee Modal -->
+    <div class="modal" id="employeeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Ajouter un Employé</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm">
+                    <input type="hidden" id="oldUsername">
+                    
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur*</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fullName">Nom complet*</label>
+                        <input type="text" id="fullName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="department">Département</label>
+                        <input type="text" id="department">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="domain">Domaine</label>
+                        <input type="text" id="domain" value="smarttech.sn">
+                    </div>
+                    
+                    <div class="form-group" id="passwordGroup">
+                        <label for="password">Mot de passe (laissez vide pour générer automatiquement)</label>
+                        <input type="password" id="password">
+                    </div>
+                    
+                    <div class="form-group" id="personalEmailGroup">
+                        <label for="personalEmail">Email personnel</label>
+                        <input type="email" id="personalEmail">
+                    </div>
+                    
+                    <div class="form-group checkbox-group" id="activeGroup">
+                        <input type="checkbox" id="active" checked>
+                        <label for="active">Compte actif</label>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-success" id="btnSave">Enregistrer</button>
+                        <button type="button" class="btn btn-danger" id="btnCancel">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmation</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Êtes-vous sûr de vouloir effectuer cette action?</p>
+                <div class="btn-group">
+                    <button class="btn btn-danger" id="btnConfirmYes">Oui</button>
+                    <button class="btn btn-primary" id="btnConfirmNo">Non</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration de base
+        const API_URL = 'http://192.168.1.16:5000/api';
+        let currentAction = 'add';
+        let employeeToDelete = null;
+        
+        // Éléments DOM
+        const employeeModal = document.getElementById('employeeModal');
+        const confirmModal = document.getElementById('confirmModal');
+        const employeeForm = document.getElementById('employeeForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const employeesTableBody = document.getElementById('employeesTableBody');
+        const loader = document.getElementById('loader');
+        const successAlert = document.getElementById('successAlert');
+        const errorAlert = document.getElementById('errorAlert');
+        const employeeInfo = document.getElementById('employeeInfo');
+        
+        // Champs du formulaire
+        const oldUsernameField = document.getElementById('oldUsername');
+        const usernameField = document.getElementById('username');
+        const fullNameField = document.getElementById('fullName');
+        const departmentField = document.getElementById('department');
+        const domainField = document.getElementById('domain');
+        const passwordField = document.getElementById('password');
+        const personalEmailField = document.getElementById('personalEmail');
+        const activeField = document.getElementById('active');
+        const passwordGroup = document.getElementById('passwordGroup');
+        const personalEmailGroup = document.getElementById('personalEmailGroup');
+        const activeGroup = document.getElementById('activeGroup');
+        
+        // Champs d'information de l'employé
+        const infoUsername = document.getElementById('infoUsername');
+        const infoFullName = document.getElementById('infoFullName');
+        const infoDomain = document.getElementById('infoDomain');
+        const infoDepartment = document.getElementById('infoDepartment');
+        const infoEmail = document.getElementById('infoEmail');
+        const infoStatus = document.getElementById('infoStatus');
+        const infoCreated = document.getElementById('infoCreated');
+        
+        // Boutons
+        const btnAddEmployee = document.getElementById('btnAddEmployee');
+        const btnSearchEmployee = document.getElementById('btnSearchEmployee');
+        const btnEditFoundEmployee = document.getElementById('btnEditFoundEmployee');
+        const btnDeleteFoundEmployee = document.getElementById('btnDeleteFoundEmployee');
+        const btnSave = document.getElementById('btnSave');
+        const btnCancel = document.getElementById('btnCancel');
+        const btnConfirmYes = document.getElementById('btnConfirmYes');
+        const btnConfirmNo = document.getElementById('btnConfirmNo');
+        const closeBtns = document.querySelectorAll('.close-modal');
+        
+        // Fonctions d'affichage des messages
+        function showSuccess(message) {
+            successAlert.textContent = message;
+            successAlert.style.display = 'block';
+            setTimeout(() => {
+                successAlert.style.display = 'none';
+            }, 3000);
+        }
+        
+        function showError(message) {
+            errorAlert.textContent = message;
+            errorAlert.style.display = 'block';
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Fonctions pour les modals
+        function openEmployeeModal(action, employee = null) {
+            currentAction = action;
+            
+            if (action === 'add') {
+                modalTitle.textContent = 'Ajouter un Employé';
+                employeeForm.reset();
+                oldUsernameField.value = '';
+                passwordGroup.style.display = 'block';
+                personalEmailGroup.style.display = 'block';
+                activeGroup.style.display = 'none';
+                domainField.value = 'smarttech.sn';
+            } else {
+                modalTitle.textContent = 'Modifier un Employé';
+                oldUsernameField.value = employee.username;
+                usernameField.value = employee.username;
+                fullNameField.value = employee.full_name;
+                departmentField.value = employee.department || '';
+                domainField.value = employee.domain || 'smarttech.sn';
+                activeField.checked = employee.active === 1;
+                passwordGroup.style.display = 'none';
+                personalEmailGroup.style.display = 'none';
+                activeGroup.style.display = 'block';
+            }
+            
+            employeeModal.style.display = 'block';
+        }
+        
+        function closeEmployeeModal() {
+            employeeModal.style.display = 'none';
+        }
+        
+        function openConfirmModal(message, callback) {
+            document.getElementById('confirmMessage').textContent = message;
+            confirmModal.style.display = 'block';
+            btnConfirmYes.onclick = callback;
+        }
+        
+        function closeConfirmModal() {
+            confirmModal.style.display = 'none';
+        }
+        
+        // Fonction pour rechercher un employé
+        async function searchEmployee() {
+            const username = document.getElementById('searchUsername').value.trim();
+            
+            if (!username) {
+                showError('Veuillez entrer un nom d\'utilisateur');
+                return;
+            }
+            
+            loader.style.display = 'block';
+            employeeInfo.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_URL}/employees/${username}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const employee = data.employee;
+                    
+                    // Afficher les informations de l'employé
+                    infoUsername.textContent = employee.username;
+                    infoFullName.textContent = employee.full_name;
+                    infoDomain.textContent = employee.domain;
+                    infoDepartment.textContent = employee.department || 'Non spécifié';
+                    infoEmail.textContent = `${employee.username}@${employee.domain}`;
+                    infoStatus.textContent = employee.active === 1 ? 'Actif' : 'Inactif';
+                    infoCreated.textContent = new Date(employee.created).toLocaleString();
+                    
+                    // Configurer les boutons d'action
+                    btnEditFoundEmployee.onclick = () => openEmployeeModal('edit', employee);
+                    btnDeleteFoundEmployee.onclick = () => {
+                        employeeToDelete = employee.username;
+                        openConfirmModal(`Êtes-vous sûr de vouloir supprimer l'employé ${employee.username}@${employee.domain}?`, deleteEmployee);
+                    };
+                    
+                    employeeInfo.style.display = 'block';
+                } else {
+                    showError(data.message || 'Employé non trouvé');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la recherche:', error);
+                showError('Erreur de connexion au serveur');
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+        
+        // Fonction pour ajouter un employé
+        async function addEmployee(formData) {
+            try {
+                const response = await fetch(`${API_URL}/employees`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showSuccess(`Employé créé avec succès. Email: ${data.email}, Mot de passe: ${data.password}`);
+                    closeEmployeeModal();
+                    // On pourrait ajouter une fonction pour mettre à jour la liste des employés ici
+                } else {
+                    showError(data.message || 'Erreur lors de la création de l\'employé');
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'ajout:', error);
+                showError('Erreur de connexion au serveur');
+            }
+        }
+        
+        // Fonction pour mettre à jour un employé
+        async function updateEmployee(oldUsername, formData) {
+            try {
+                const response = await fetch(`${API_URL}/employees/${oldUsername}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showSuccess(data.message || 'Employé mis à jour avec succès');
+                    closeEmployeeModal();
+                    // Si l'employé actuellement affiché a été modifié, mettre à jour son affichage
+                    if (document.getElementById('searchUsername').value === oldUsername) {
+                        document.getElementById('searchUsername').value = formData.new_username;
+                        searchEmployee();
+                    }
+                } else {
+                    showError(data.message || 'Erreur lors de la mise à jour de l\'employé');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour:', error);
+                showError('Erreur de connexion au serveur');
+            }
+        }
+        
+        // Fonction pour supprimer un employé
+        async function deleteEmployee() {
+            if (!employeeToDelete) return;
+            
+            closeConfirmModal();
+            loader.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_URL}/employees/${employeeToDelete}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showSuccess(data.message || 'Employé supprimé avec succès');
+                    employeeInfo.style.display = 'none';
+                    document.getElementById('searchUsername').value = '';
+                } else {
+                    showError(data.message || 'Erreur lors de la suppression de l\'employé');
+                }
+            } catch (error) {
+                console.error('Erreur lors de la suppression:', error);
+                showError('Erreur de connexion au serveur');
+            } finally {
+                loader.style.display = 'none';
+                employeeToDelete = null;
+            }
+        }
+        
+        // Gestion du formulaire
+        employeeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                username: usernameField.value.trim(),
+                new_username: usernameField.value.trim(),
+                full_name: fullNameField.value.trim(),
+                department: departmentField.value.trim(),
+                domain: domainField.value.trim()
+            };
+            
+            if (currentAction === 'add') {
+                if (passwordField.value) {
+                    formData.password = passwordField.value;
+                }
+                
+                if (personalEmailField.value) {
+                    formData.personal_email = personalEmailField.value;
+                }
+                
+                addEmployee(formData);
+            } else {
+                formData.active = activeField.checked ? 1 : 0;
+                updateEmployee(oldUsernameField.value, formData);
+            }
+        });
+        
+        // Gestionnaires d'événements
+        btnAddEmployee.addEventListener('click', () => openEmployeeModal('add'));
+        btnSearchEmployee.addEventListener('click', searchEmployee);
+        btnCancel.addEventListener('click', closeEmployeeModal);
+        btnConfirmNo.addEventListener('click', closeConfirmModal);
+        
+        // Fermer les modals quand on clique sur X
+        closeBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                closeEmployeeModal();
+                closeConfirmModal();
+            });
+        });
+        
+        // Fermer les modals quand on clique en dehors
+        window.addEventListener('click', function(e) {
+            if (e.target === employeeModal) {
+                closeEmployeeModal();
+            }
+            if (e.target === confirmModal) {
+                closeConfirmModal();
+            }
+        });
+        
+        // Recherche par touche Entrée
+        document.getElementById('searchUsername').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                searchEmployee();
+            }
+        });
+        
+        // Initialisation - on pourrait ajouter ici une fonction pour charger tous les employés
+        // si une telle API existait dans le backend
+    </script>
+</body>
+</html>
